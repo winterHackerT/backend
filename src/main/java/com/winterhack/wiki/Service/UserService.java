@@ -11,6 +11,7 @@ import com.winterhack.wiki.Data.UpdateUserDTO;
 import com.winterhack.wiki.Entity.UserEntity;
 import com.winterhack.wiki.Exception.CreateUserException;
 import com.winterhack.wiki.Exception.DeleteUserException;
+import com.winterhack.wiki.Exception.ReadUserException;
 import com.winterhack.wiki.Exception.UpdateUserException;
 import com.winterhack.wiki.Repository.UserRepository;
 
@@ -39,6 +40,14 @@ public class UserService {
     userEntity.setEmail(email);
 
     userRepository.save(userEntity);
+  }
+
+  public UserEntity readUser(String username) throws ReadUserException {
+    return userRepository
+      .findByUsername(username)
+      .orElseThrow(
+        () -> new ReadUserException("사용자가 존재하지 않습니다")
+      );
   }
 
   public void deleteUser(String username) throws DeleteUserException {
