@@ -1,5 +1,7 @@
 package com.winterhack.wiki.Entity;
 
+import java.util.Set;
+
 import javax.persistence.*;
 
 import lombok.Getter;
@@ -25,5 +27,9 @@ public class UserEntity {
 
   @Column(nullable = true, length = 100)
   private String lastAccessAddr;
+
+  @Column(nullable = false, length = 100)
+  @ElementCollection(targetClass = String.class)
+  private Set<String> authorities;
 
 }
