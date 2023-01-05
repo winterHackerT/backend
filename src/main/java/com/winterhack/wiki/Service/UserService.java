@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import com.winterhack.wiki.Data.UpdateUserDTO;
 import com.winterhack.wiki.Entity.UserEntity;
 import com.winterhack.wiki.Exception.CreateUserException;
 import com.winterhack.wiki.Exception.DeleteUserException;
+import com.winterhack.wiki.Exception.UpdateUserException;
 import com.winterhack.wiki.Repository.UserRepository;
 
 @Service
@@ -45,6 +47,26 @@ public class UserService {
         .findByUsername(username)
         .orElseThrow(() -> new DeleteUserException("사용자가 존재하지 않습니다"))
     );
+  }
+
+  public void updateUser(String username, UpdateUserDTO updateUserDTO) throws UpdateUserException {
+    if (!isUserExist(username)) {
+      throw new UpdateUserException("사용자가 존재하지 않습니다");
+    }
+
+    UserEntity userEntity = userRepository.findByUsername(username).get();
+
+    if (updateUserDTO.getEmail() != null) {
+      userEntity.setEmail(updateUserDTO.getEmail());
+    }
+
+    if (updateUserDTO.getPassword() != null) {
+      userEntity.setPassword(
+        BCrypt.hashpw(updateUserDTO.getPassword(), BCrypt.gensalt())
+      );
+    }
+
+    userRepository.save(userEntity);
   }
 
 }
