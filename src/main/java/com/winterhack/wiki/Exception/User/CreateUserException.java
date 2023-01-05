@@ -1,4 +1,4 @@
-package com.winterhack.wiki.Exception;
+package com.winterhack.wiki.Exception.User;
 
 public class CreateUserException extends Exception {
 

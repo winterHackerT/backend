@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.winterhack.wiki.Data.UpdateUserDTO;
 import com.winterhack.wiki.Entity.UserEntity;
-import com.winterhack.wiki.Exception.CreateUserException;
-import com.winterhack.wiki.Exception.DeleteUserException;
-import com.winterhack.wiki.Exception.ReadUserException;
-import com.winterhack.wiki.Exception.UpdateUserException;
+import com.winterhack.wiki.Exception.User.CreateUserException;
+import com.winterhack.wiki.Exception.User.DeleteUserException;
+import com.winterhack.wiki.Exception.User.ReadUserException;
+import com.winterhack.wiki.Exception.User.UpdateUserException;
 import com.winterhack.wiki.Repository.UserRepository;
 
 @Service
