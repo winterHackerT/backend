@@ -12,4 +12,9 @@ public class WikiController {
     return "Hello, World";
   }
 
+  @RequestMapping(method = RequestMethod.GET, path = "/secure")
+  public String getSecure() {
+    return "SECURE TEST API";
+  }
+
 }
