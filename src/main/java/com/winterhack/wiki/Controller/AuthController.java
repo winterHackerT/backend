@@ -1,6 +1,5 @@
 package com.winterhack.wiki.Controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.winterhack.wiki.Data.AutoDTO;
 import com.winterhack.wiki.JWT.JwtFilter;
 import com.winterhack.wiki.JWT.TokenProvider;
-import com.winterhack.wiki.Repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,9 +22,6 @@ public class AuthController {
   
   private final TokenProvider tokenProvider;
   private final AuthenticationManagerBuilder authenticationManagerBuilder;
-
-  @Autowired
-  private final UserRepository userRepository;
 
   @RequestMapping(method = RequestMethod.POST, path = "/auth")
   public String authorize(@RequestBody AutoDTO authDTO) {
