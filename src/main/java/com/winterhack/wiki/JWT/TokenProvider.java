@@ -81,7 +81,7 @@ public class TokenProvider implements InitializingBean {
 
     Collection<? extends GrantedAuthority> authorities = Arrays
       .stream(claims.get(AUTHORITES_KEY).toString().split(","))
-      .map((x) -> new SimpleGrantedAuthority(x == "" || x == null ? "NULL" : x))
+      .map((x) -> new SimpleGrantedAuthority(x == "" || x == null ? "USER" : x))
       .collect(Collectors.toList());
 
     User principal = new User(claims.getSubject(), "", authorities);
