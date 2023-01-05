@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.winterhack.wiki.Entity.UserEntity;
 import com.winterhack.wiki.Exception.CreateUserException;
+import com.winterhack.wiki.Exception.DeleteUserException;
 import com.winterhack.wiki.Repository.UserRepository;
 
 @Service
@@ -36,6 +37,14 @@ public class UserService {
     userEntity.setEmail(email);
 
     userRepository.save(userEntity);
+  }
+
+  public void deleteUser(String username) throws DeleteUserException {
+    userRepository.delete(
+      userRepository
+        .findByUsername(username)
+        .orElseThrow(() -> new DeleteUserException("사용자가 존재하지 않습니다"))
+    );
   }
 
 }
