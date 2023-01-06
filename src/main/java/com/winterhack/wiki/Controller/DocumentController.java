@@ -33,13 +33,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DocumentController {
 
-  @Autowired
   private final UserService userService;
-
-  @Autowired
   private final DocumentService documentService;
-
-  @Autowired
   private final DocumentStarService documentStarService;
 
   @RequestMapping(method = RequestMethod.POST, path = "/docs")
