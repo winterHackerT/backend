@@ -20,7 +20,6 @@ import com.winterhack.wiki.Data.Document.ReadDocumentDTO;
 import com.winterhack.wiki.Data.Document.ReadDocumentHistoryDTO;
 import com.winterhack.wiki.Data.User.ResultDTO;
 import com.winterhack.wiki.Entity.DocumentEntity;
-import com.winterhack.wiki.Entity.DocumentStarEntity;
 import com.winterhack.wiki.Entity.UserEntity;
 import com.winterhack.wiki.Exception.User.ReadUserException;
 import com.winterhack.wiki.Service.DocumentService;
