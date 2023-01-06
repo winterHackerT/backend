@@ -127,4 +127,10 @@ public class DocumentController {
 
     return new ResultDTO("문서 삭제", true);
   }
+
+  @RequestMapping(method = RequestMethod.GET, path = "/docs/history/{documentTitle}")
+  public ResultDTO history(@PathVariable("documentTitle") String documentTitle) {
+    List<ReadDocumentHistoryDTO> documentHistoryList = documentService.readDocumentHistory(documentTitle);
+    return new ResultDTO("문서 역사 조회", true, documentHistoryList);
+  }
 }

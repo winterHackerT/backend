@@ -38,4 +38,18 @@ public class DocumentService {
     return list.size() == 0 ? null : list.get(0);
   }
 
+  public List<ReadDocumentHistoryDTO> readDocumentHistory(String title) {
+    List<DocumentEntity> list = documentRepository.findAllByTitleOrderByDatetimeAsc(title);
+    AtomicLong order = new AtomicLong();
+
+    List<ReadDocumentHistoryDTO> history = list
+      .stream()
+      .map(
+        (x) -> new ReadDocumentHistoryDTO(order.getAndIncrement(), x)
+      )
+      .collect(Collectors.toList());
+
+    return history;
+  }
+
 }
