@@ -3,6 +3,7 @@ package com.winterhack.wiki.Controller;
 import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +32,7 @@ public class DocumentController {
   private DocumentService documentService;
 
   @RequestMapping(method = RequestMethod.POST, path = "/docs")
-  public ResultDTO post(HttpServletRequest request, Principal principal, @RequestBody PostDocumentDTO postDocumentDTO) {
+  public ResultDTO post(HttpServletRequest request, Principal principal, @RequestBody @Valid PostDocumentDTO postDocumentDTO) {
     UserEntity user = null;
 
     if (principal != null) {
