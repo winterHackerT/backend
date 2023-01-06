@@ -67,8 +67,13 @@ public class DocumentController {
     readDocumentDTO.setTitle(documentEntity.getTitle());
     readDocumentDTO.setContent(documentEntity.getContent());
     readDocumentDTO.setDatetime(documentEntity.getDatetime());
-    readDocumentDTO.setUsername(documentEntity.getUser().getUsername());
     readDocumentDTO.setAddr(documentEntity.getAddr());
+
+    UserEntity userEntity = documentEntity.getUser();
+
+    if (userEntity != null) {
+      readDocumentDTO.setUsername(userEntity.getUsername());
+    }
 
     return new ResultDTO("문서 조회", true, readDocumentDTO);
   }
