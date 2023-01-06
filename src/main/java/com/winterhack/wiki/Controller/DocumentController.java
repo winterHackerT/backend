@@ -32,7 +32,7 @@ public class DocumentController {
   private DocumentService documentService;
 
   @RequestMapping(method = RequestMethod.POST, path = "/docs")
-  public ResultDTO post(HttpServletRequest request, Principal principal, @RequestBody @Valid PostDocumentDTO postDocumentDTO) {
+  public ResultDTO post(HttpServletRequest request, Principal principal, @RequestBody @Valid PostDocumentDTO document) {
     UserEntity user = null;
 
     if (principal != null) {
@@ -45,8 +45,8 @@ public class DocumentController {
     }
 
     documentService.postDocument(
-      postDocumentDTO.getTitle(),
-      postDocumentDTO.getContent(),
+      document.getTitle(),
+      document.getContent(),
       user,
       request.getRemoteAddr()
     );
