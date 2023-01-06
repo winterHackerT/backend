@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 public class ReadDocumentHistoryDTO {
   
+  private long id;
   private Long order;
   private String working;
   private String message;
@@ -19,6 +20,7 @@ public class ReadDocumentHistoryDTO {
   private int length;
 
   public ReadDocumentHistoryDTO(long order, DocumentEntity documentEntity) {
+    this.id = documentEntity.getId();
     this.order = order;
     this.working = documentEntity.getWorking();
     this.message = documentEntity.getMessage();

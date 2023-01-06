@@ -2,6 +2,7 @@ package com.winterhack.wiki.Controller;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -76,19 +77,19 @@ public class DocumentController {
       return new ResultDTO("해당 문서가 존재하지 않습니다", false);
     }
 
-    ReadDocumentDTO readDocumentDTO = new ReadDocumentDTO();
+    ReadDocumentDTO readDocumentDTO = new ReadDocumentDTO(documentEntity);
+    return new ResultDTO("문서 조회", true, readDocumentDTO);
+  }
 
-    readDocumentDTO.setTitle(documentEntity.getTitle());
-    readDocumentDTO.setContent(documentEntity.getContent());
-    readDocumentDTO.setDatetime(documentEntity.getDatetime());
-    readDocumentDTO.setAddr(documentEntity.getAddr());
+  @RequestMapping(method = RequestMethod.GET, path = "/docs/id/{documentId}")
+  public ResultDTO readById(@PathVariable("documentId") long documentId) {
+    Optional<DocumentEntity> documentEntity = documentService.readDocumentById(documentId);
 
-    UserEntity userEntity = documentEntity.getUser();
-
-    if (userEntity != null) {
-      readDocumentDTO.setUsername(userEntity.getUsername());
+    if (!documentEntity.isPresent()) {
+      return new ResultDTO("해당 문서가 존재하지 않습니다", false);
     }
 
+    ReadDocumentDTO readDocumentDTO = new ReadDocumentDTO(documentEntity.get());
     return new ResultDTO("문서 조회", true, readDocumentDTO);
   }
 
