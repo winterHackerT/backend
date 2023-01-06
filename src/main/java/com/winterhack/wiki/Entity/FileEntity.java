@@ -1,6 +1,5 @@
 package com.winterhack.wiki.Entity;
 
-import java.time.LocalDateTime;
 import javax.persistence.*;
 
 import lombok.Getter;
