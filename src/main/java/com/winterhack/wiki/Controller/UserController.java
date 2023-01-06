@@ -2,7 +2,6 @@ package com.winterhack.wiki.Controller;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +19,13 @@ import com.winterhack.wiki.Exception.User.ReadUserException;
 import com.winterhack.wiki.Exception.User.UpdateUserException;
 import com.winterhack.wiki.Service.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 public class UserController {
 
-  @Autowired
-  private UserService userService;
+  private final UserService userService;
   
   @RequestMapping(method = RequestMethod.POST, path = "/user")
   public ResultDTO create(@Valid @RequestBody CreateUserDTO user) {

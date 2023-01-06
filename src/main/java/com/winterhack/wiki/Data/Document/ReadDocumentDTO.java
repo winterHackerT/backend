@@ -16,19 +16,18 @@ public class ReadDocumentDTO {
   private LocalDateTime datetime;
   private String username;
   private String addr;
+  private int starCount;
 
-  public ReadDocumentDTO(DocumentEntity documentEntity) {
-    id = documentEntity.getId();
-    title = documentEntity.getTitle();
-    content = documentEntity.getContent();
-    datetime = documentEntity.getDatetime();
-    addr = documentEntity.getAddr();
+  public ReadDocumentDTO(DocumentEntity documentEntity, int starCount) {
+    this.id = documentEntity.getId();
+    this.title = documentEntity.getTitle();
+    this.content = documentEntity.getContent();
+    this.datetime = documentEntity.getDatetime();
+    this.addr = documentEntity.getAddr();
+    this.starCount = starCount;
 
     UserEntity userEntity = documentEntity.getUser();
-
-    if (userEntity != null) {
-      username = userEntity.getUsername();
-    }
+    this.username = userEntity == null ? null : userEntity.getUsername();
   }
 
 }

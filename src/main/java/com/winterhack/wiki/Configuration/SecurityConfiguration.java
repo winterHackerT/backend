@@ -76,6 +76,7 @@ public class SecurityConfiguration {
       .antMatchers("/hello").permitAll()
       .antMatchers("/auth").permitAll()
       .antMatchers("/secure").authenticated()
+      .antMatchers("/docs/star/**").authenticated()
 
       // JwtSecurityConfig
       .and()
