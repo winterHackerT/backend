@@ -1,5 +1,7 @@
 package com.winterhack.wiki.Configuration;
 
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,6 +11,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.winterhack.wiki.JWT.JwtAccessDeniedHandler;
 import com.winterhack.wiki.JWT.JwtAuthenticationEntryPoint;
@@ -33,6 +38,21 @@ public class SecurityConfiguration {
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
     return (web) -> web.ignoring().antMatchers("/favicon.ico");
+  }
+
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+      CorsConfiguration configuration = new CorsConfiguration();
+      
+      configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+      configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT"));
+      configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+      configuration.setAllowCredentials(true);
+      
+      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+      source.registerCorsConfiguration("/**", configuration);
+      
+      return source;
   }
 
   @Bean
@@ -62,6 +82,10 @@ public class SecurityConfiguration {
       .apply(new JwtSecurityConfiguration(tokenProvider))
 
       .and()
+
+      .cors()
+      .and()
+
       .build();
   }
 
