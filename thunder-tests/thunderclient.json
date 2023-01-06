@@ -192,5 +192,23 @@
     "headers": [],
     "params": [],
     "tests": []
+  },
+  {
+    "_id": "0c5d0740-6f72-4e4e-9320-106a22c38084",
+    "colId": "7893e9f2-0b70-499f-abc6-e1490f6d06eb",
+    "containerId": "b33dd91b-1f1f-4580-93d1-3833abe1fcca",
+    "name": "Toggle Document Star",
+    "url": "localhost:8081/docs/star/DocumentTitle",
+    "method": "GET",
+    "sortNum": 130000,
+    "created": "2023-01-06T10:06:57.561Z",
+    "modified": "2023-01-06T10:43:02.855Z",
+    "headers": [],
+    "params": [],
+    "auth": {
+      "type": "bearer",
+      "bearer": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0Iiwid2lraSI6IiIsImV4cCI6MTY3MzAwMTg2NH0.aYopicGSj5wMZPkDNUtwGOvL3mrL-ws2d4HTdruKWfWK_iesT-9kBk-ODtHsjefmb9DslfYflqe2wX7Z2NbwhQ"
+    },
+    "tests": []
   }
 ]
