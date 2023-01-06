@@ -1,4 +1,4 @@
-package com.winterhack.wiki.Data;
+package com.winterhack.wiki.Data.User;
 
 import java.util.Set;
 

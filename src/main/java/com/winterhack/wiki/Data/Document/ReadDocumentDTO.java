@@ -1,17 +1,16 @@
-package com.winterhack.wiki.Data;
+package com.winterhack.wiki.Data.Document;
 
 import java.time.LocalDateTime;
 
 import lombok.Data;
 
 @Data
-public class DocumentDTO {
+public class ReadDocumentDTO {
   
-  private Long id;
   private String title;
   private String content;
   private LocalDateTime datetime;
-  private UserDTO user;
+  private String username;
   private String addr;
 
 }

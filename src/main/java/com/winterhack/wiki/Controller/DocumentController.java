@@ -1,8 +1,9 @@
 package com.winterhack.wiki.Controller;
 
-import java.util.Optional;
+import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,61 +12,100 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.winterhack.wiki.Data.DocumentDTO;
-import com.winterhack.wiki.Data.ResultDTO;
+import com.winterhack.wiki.Data.Document.PostDocumentDTO;
+import com.winterhack.wiki.Data.Document.ReadDocumentDTO;
+import com.winterhack.wiki.Data.User.ResultDTO;
 import com.winterhack.wiki.Entity.DocumentEntity;
+import com.winterhack.wiki.Entity.UserEntity;
+import com.winterhack.wiki.Exception.User.ReadUserException;
 import com.winterhack.wiki.Service.DocumentService;
+import com.winterhack.wiki.Service.UserService;
+
 
 @RestController
 public class DocumentController {
 
   @Autowired
+  private UserService userService;
+
+  @Autowired
   private DocumentService documentService;
-  
+
   @RequestMapping(method = RequestMethod.POST, path = "/docs")
-  public ResultDTO create(HttpServletRequest request, @RequestBody DocumentDTO documentDTO) {
-    if (documentDTO.getTitle() == null) {
-      return new ResultDTO("문서 타이틀이 존재하지 않습니다",  false);
-    } else if (documentDTO.getContent() == null) {
-      return new ResultDTO("문서 내용이 존재하지 않습니다",  false);
+  public ResultDTO post(HttpServletRequest request, Principal principal, @RequestBody @Valid PostDocumentDTO document) {
+    UserEntity user = null;
+
+    if (principal != null) {
+      try {
+        user = userService.readUser(principal.getName());
+        
+      } catch (ReadUserException error) {
+        return new ResultDTO("사용자 인증 오류: " + error.getMessage(), false);
+      }
     }
 
-    documentService.addNewDocument(
-      documentDTO.getTitle(),
-      documentDTO.getContent(),
-      null,
-      request.getRemoteAddr()
+    documentService.postDocument(
+      document.getTitle(),
+      document.getContent(),
+      user,
+      request.getRemoteAddr(),
+      document.getMessage()
     );
 
-    return new ResultDTO("새로운 문서 생성", true);
+    return new ResultDTO("문서 작성", true);
   }
 
   @RequestMapping(method = RequestMethod.GET, path = "/docs/{documentTitle}")
   public ResultDTO read(@PathVariable("documentTitle") String documentTitle) {
-    Optional<DocumentEntity> documentEntity = documentService.getDocument(documentTitle);
+    DocumentEntity documentEntity = documentService.readDocument(documentTitle);
 
-    if (documentEntity.isPresent()) {
-      return new ResultDTO("문서 조회", true, documentEntity);
-    } else {
-      return new ResultDTO("문서가 존재하지 않습니다", false);
+    if (documentEntity == null || documentEntity.getContent().equals("")) {
+      return new ResultDTO("해당 문서가 존재하지 않습니다", false);
     }
+
+    ReadDocumentDTO readDocumentDTO = new ReadDocumentDTO();
+
+    readDocumentDTO.setTitle(documentEntity.getTitle());
+    readDocumentDTO.setContent(documentEntity.getContent());
+    readDocumentDTO.setDatetime(documentEntity.getDatetime());
+    readDocumentDTO.setAddr(documentEntity.getAddr());
+
+    UserEntity userEntity = documentEntity.getUser();
+
+    if (userEntity != null) {
+      readDocumentDTO.setUsername(userEntity.getUsername());
+    }
+
+    return new ResultDTO("문서 조회", true, readDocumentDTO);
   }
 
   @RequestMapping(method = RequestMethod.DELETE, path = "/docs/{documentTitle}")
-  public ResultDTO delete(HttpServletRequest request, @PathVariable("documentTitle") String documentTitle) {
-    Optional<DocumentEntity> documentEntity = documentService.getDocument(documentTitle);
+  public ResultDTO delete(HttpServletRequest request, Principal principal, @PathVariable("documentTitle") String documentTitle) {
+    DocumentEntity documentEntity = documentService.readDocument(documentTitle);
 
-    if (documentEntity.isPresent()) {
-      if (documentEntity.get().getContent().equals("")) {
-        return new ResultDTO("문서는 이미 내용이 없습니다", false);
-      } else {
-        documentService.deleteDocument(documentTitle, null, request.getRemoteAddr());
-        return new ResultDTO("문서 삭제", true);
-      }
-
-    } else {
+    if (documentEntity == null) {
       return new ResultDTO("문서가 존재하지 않습니다", false);
     }
-  }
 
+    UserEntity user = null;
+
+    if (principal != null) {
+      try {
+        user = userService.readUser(principal.getName());
+        
+      } catch (ReadUserException error) {
+        return new ResultDTO("사용자 인증 오류: " + error.getMessage(), false);
+      }
+    }
+
+    documentService.postDocument(
+      documentTitle,
+      "",
+      user,
+      request.getRemoteAddr(),
+      "문서 삭제"
+    );
+
+    return new ResultDTO("문서 삭제", true);
+  }
 }

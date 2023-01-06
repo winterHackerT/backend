@@ -1,9 +1,9 @@
-package com.winterhack.wiki.Data;
+package com.winterhack.wiki.Data.Auth;
 
 import lombok.Data;
 
 @Data
-public class AutoDTO {
+public class AuthDTO {
   private String username;
   private String password;
 }

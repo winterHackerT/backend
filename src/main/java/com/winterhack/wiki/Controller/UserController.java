@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.winterhack.wiki.Data.ResultDTO;
-import com.winterhack.wiki.Data.UpdateUserDTO;
+import com.winterhack.wiki.Data.User.CreateUserDTO;
+import com.winterhack.wiki.Data.User.ReadUserDTO;
+import com.winterhack.wiki.Data.User.ResultDTO;
+import com.winterhack.wiki.Data.User.UpdateUserDTO;
 import com.winterhack.wiki.Entity.UserEntity;
 import com.winterhack.wiki.Exception.User.CreateUserException;
 import com.winterhack.wiki.Exception.User.DeleteUserException;
 import com.winterhack.wiki.Exception.User.ReadUserException;
 import com.winterhack.wiki.Exception.User.UpdateUserException;
-import com.winterhack.wiki.Data.CreateUserDTO;
-import com.winterhack.wiki.Data.ReadUserDTO;
 import com.winterhack.wiki.Service.UserService;
 
 @RestController

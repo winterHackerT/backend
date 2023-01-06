@@ -31,4 +31,7 @@ public class DocumentEntity {
   @Column(nullable = true)
   private String addr;
 
+  @Column(nullable = false, length = 1000)
+  private String message;
+
 }

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import com.winterhack.wiki.Data.UpdateUserDTO;
+import com.winterhack.wiki.Data.User.UpdateUserDTO;
 import com.winterhack.wiki.Entity.UserEntity;
 import com.winterhack.wiki.Exception.User.CreateUserException;
 import com.winterhack.wiki.Exception.User.DeleteUserException;

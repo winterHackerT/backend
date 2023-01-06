@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.winterhack.wiki.Data.AutoDTO;
+import com.winterhack.wiki.Data.Auth.AuthDTO;
 import com.winterhack.wiki.JWT.JwtFilter;
 import com.winterhack.wiki.JWT.TokenProvider;
 
@@ -24,7 +24,7 @@ public class AuthController {
   private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
   @RequestMapping(method = RequestMethod.POST, path = "/auth")
-  public String authorize(@RequestBody AutoDTO authDTO) {
+  public String authorize(@RequestBody AuthDTO authDTO) {
     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
       authDTO.getUsername(),
       authDTO.getPassword()
