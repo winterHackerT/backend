@@ -48,7 +48,8 @@ public class DocumentController {
       document.getTitle(),
       document.getContent(),
       user,
-      request.getRemoteAddr()
+      request.getRemoteAddr(),
+      document.getMessage()
     );
 
     return new ResultDTO("문서 작성", true);

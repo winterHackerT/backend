@@ -16,13 +16,14 @@ public class DocumentService {
   @Autowired
   private DocumentRepository documentRepository;
 
-  public void postDocument(String title, String content, UserEntity user, String addr) {
+  public void postDocument(String title, String content, UserEntity user, String addr, String message) {
     DocumentEntity documentEntity = new DocumentEntity();
 
     documentEntity.setTitle(title);
     documentEntity.setContent(content);
     documentEntity.setUser(user);
     documentEntity.setAddr(addr);
+    documentEntity.setMessage(message);
     documentEntity.setDatetime(LocalDateTime.now());
 
     documentRepository.save(documentEntity);

@@ -18,4 +18,8 @@ public class PostDocumentDTO {
   @NotEmpty
   private String content;
 
+  @Size(min = 2)
+  @NotEmpty
+  private String message;
+
 }
