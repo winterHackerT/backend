@@ -37,13 +37,19 @@
     "colId": "7893e9f2-0b70-499f-abc6-e1490f6d06eb",
     "containerId": "5271899b-10e6-4c4e-a5e3-04d8a881b91d",
     "name": "Delete Document",
-    "url": "localhost:8081/docs/DocumentTitle",
+    "url": "localhost:8081/docs/DocumentTitle?message=test",
     "method": "DELETE",
     "sortNum": 30000,
     "created": "2023-01-06T02:05:19.514Z",
-    "modified": "2023-01-06T02:05:31.033Z",
+    "modified": "2023-01-06T06:44:48.140Z",
     "headers": [],
-    "params": [],
+    "params": [
+      {
+        "name": "message",
+        "value": "test",
+        "isPath": false
+      }
+    ],
     "tests": []
   },
   {
