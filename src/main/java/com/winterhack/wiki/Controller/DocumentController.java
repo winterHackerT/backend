@@ -79,7 +79,33 @@ public class DocumentController {
     return new ResultDTO("문서 조회", true, readDocumentDTO);
   }
 
-  // @RequestMapping(method = RequestMethod.DELETE, path = "/docs/{documentTitle}")
-  // public ResultDTO delete(@PathVariable("documentTitle") String documentTitle) {}
+  @RequestMapping(method = RequestMethod.DELETE, path = "/docs/{documentTitle}")
+  public ResultDTO delete(HttpServletRequest request, Principal principal, @PathVariable("documentTitle") String documentTitle) {
+    DocumentEntity documentEntity = documentService.readDocument(documentTitle);
 
+    if (documentEntity == null) {
+      return new ResultDTO("문서가 존재하지 않습니다", false);
+    }
+
+    UserEntity user = null;
+
+    if (principal != null) {
+      try {
+        user = userService.readUser(principal.getName());
+        
+      } catch (ReadUserException error) {
+        return new ResultDTO("사용자 인증 오류: " + error.getMessage(), false);
+      }
+    }
+
+    documentService.postDocument(
+      documentTitle,
+      "",
+      user,
+      request.getRemoteAddr(),
+      "문서 삭제"
+    );
+
+    return new ResultDTO("문서 삭제", true);
+  }
 }
