@@ -1,28 +1,59 @@
 package com.winterhack.wiki.Controller;
 
+import java.security.Principal;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.winterhack.wiki.Data.ResultDTO;
+import com.winterhack.wiki.Data.Document.PostDocumentDTO;
+import com.winterhack.wiki.Data.User.ResultDTO;
+import com.winterhack.wiki.Entity.UserEntity;
+import com.winterhack.wiki.Exception.User.ReadUserException;
 import com.winterhack.wiki.Service.DocumentService;
+import com.winterhack.wiki.Service.UserService;
 
 
 @RestController
 public class DocumentController {
 
   @Autowired
+  private UserService userService;
+
+  @Autowired
   private DocumentService documentService;
 
   @RequestMapping(method = RequestMethod.POST, path = "/docs")
-  public ResultDTO post() {}
+  public ResultDTO post(HttpServletRequest request, Principal principal, @RequestBody PostDocumentDTO postDocumentDTO) {
+    UserEntity user = null;
 
-  @RequestMapping(method = RequestMethod.GET, path = "/docs/{documentTitle}")
-  public ResultDTO read(@PathVariable("documentTitle") String documentTitle) {}
+    if (principal != null) {
+      try {
+        user = userService.readUser(principal.getName());
+        
+      } catch (ReadUserException error) {
+        return new ResultDTO("사용자 인증 오류: " + error.getMessage(), false);
+      }
+    }
 
-  @RequestMapping(method = RequestMethod.DELETE, path = "/docs/{documentTitle}")
-  public ResultDTO delete(@PathVariable("documentTitle") String documentTitle) {}
+    documentService.postDocument(
+      postDocumentDTO.getTitle(),
+      postDocumentDTO.getContent(),
+      user,
+      request.getRemoteAddr()
+    );
+
+    return new ResultDTO("문서 작성", true);
+  }
+
+  // @RequestMapping(method = RequestMethod.GET, path = "/docs/{documentTitle}")
+  // public ResultDTO read(@PathVariable("documentTitle") String documentTitle) {}
+
+  // @RequestMapping(method = RequestMethod.DELETE, path = "/docs/{documentTitle}")
+  // public ResultDTO delete(@PathVariable("documentTitle") String documentTitle) {}
 
 }
