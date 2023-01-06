@@ -20,20 +20,28 @@ import com.winterhack.wiki.Data.Document.ReadDocumentDTO;
 import com.winterhack.wiki.Data.Document.ReadDocumentHistoryDTO;
 import com.winterhack.wiki.Data.User.ResultDTO;
 import com.winterhack.wiki.Entity.DocumentEntity;
+import com.winterhack.wiki.Entity.DocumentStarEntity;
 import com.winterhack.wiki.Entity.UserEntity;
 import com.winterhack.wiki.Exception.User.ReadUserException;
 import com.winterhack.wiki.Service.DocumentService;
+import com.winterhack.wiki.Service.DocumentStarService;
 import com.winterhack.wiki.Service.UserService;
+
+import lombok.RequiredArgsConstructor;
 
 
 @RestController
+@RequiredArgsConstructor
 public class DocumentController {
 
   @Autowired
-  private UserService userService;
+  private final UserService userService;
 
   @Autowired
-  private DocumentService documentService;
+  private final DocumentService documentService;
+
+  @Autowired
+  private final DocumentStarService documentStarService;
 
   @RequestMapping(method = RequestMethod.POST, path = "/docs")
   public ResultDTO post(HttpServletRequest request, Principal principal, @RequestBody @Valid PostDocumentDTO document) {
@@ -77,19 +85,25 @@ public class DocumentController {
       return new ResultDTO("해당 문서가 존재하지 않습니다", false);
     }
 
-    ReadDocumentDTO readDocumentDTO = new ReadDocumentDTO(documentEntity);
+    int starCount = documentStarService.getDocumentStarCount(documentTitle);
+    ReadDocumentDTO readDocumentDTO = new ReadDocumentDTO(documentEntity, starCount);
+
     return new ResultDTO("문서 조회", true, readDocumentDTO);
   }
 
   @RequestMapping(method = RequestMethod.GET, path = "/docs/id/{documentId}")
   public ResultDTO readById(@PathVariable("documentId") long documentId) {
-    Optional<DocumentEntity> documentEntity = documentService.readDocumentById(documentId);
+    Optional<DocumentEntity> documentEntityOptional = documentService.readDocumentById(documentId);
 
-    if (!documentEntity.isPresent()) {
+    if (!documentEntityOptional.isPresent()) {
       return new ResultDTO("해당 문서가 존재하지 않습니다", false);
     }
 
-    ReadDocumentDTO readDocumentDTO = new ReadDocumentDTO(documentEntity.get());
+    DocumentEntity documentEntity = documentEntityOptional.get();
+
+    int starCount = documentStarService.getDocumentStarCount(documentEntity.getTitle());
+    ReadDocumentDTO readDocumentDTO = new ReadDocumentDTO(documentEntity, starCount);
+
     return new ResultDTO("문서 조회", true, readDocumentDTO);
   }
 
