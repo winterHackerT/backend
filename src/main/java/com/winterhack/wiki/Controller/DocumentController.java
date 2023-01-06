@@ -1,6 +1,8 @@
 package com.winterhack.wiki.Controller;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -10,10 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.winterhack.wiki.Data.Document.PostDocumentDTO;
 import com.winterhack.wiki.Data.Document.ReadDocumentDTO;
+import com.winterhack.wiki.Data.Document.ReadDocumentHistoryDTO;
 import com.winterhack.wiki.Data.User.ResultDTO;
 import com.winterhack.wiki.Entity.DocumentEntity;
 import com.winterhack.wiki.Entity.UserEntity;
@@ -33,6 +37,15 @@ public class DocumentController {
 
   @RequestMapping(method = RequestMethod.POST, path = "/docs")
   public ResultDTO post(HttpServletRequest request, Principal principal, @RequestBody @Valid PostDocumentDTO document) {
+    String working = "문서 수정";
+    DocumentEntity documentEntity = documentService.readDocument(document.getTitle());
+
+    if (documentEntity == null) {
+      working = "새로운 문서 추가";
+    } else if (documentEntity.getContent().equals("")) {
+      working = "삭제된 문서 복구";
+    }
+
     UserEntity user = null;
 
     if (principal != null) {
@@ -49,6 +62,7 @@ public class DocumentController {
       document.getContent(),
       user,
       request.getRemoteAddr(),
+      working,
       document.getMessage()
     );
 
@@ -63,24 +77,29 @@ public class DocumentController {
       return new ResultDTO("해당 문서가 존재하지 않습니다", false);
     }
 
-    ReadDocumentDTO readDocumentDTO = new ReadDocumentDTO();
+    ReadDocumentDTO readDocumentDTO = new ReadDocumentDTO(documentEntity);
+    return new ResultDTO("문서 조회", true, readDocumentDTO);
+  }
 
-    readDocumentDTO.setTitle(documentEntity.getTitle());
-    readDocumentDTO.setContent(documentEntity.getContent());
-    readDocumentDTO.setDatetime(documentEntity.getDatetime());
-    readDocumentDTO.setAddr(documentEntity.getAddr());
+  @RequestMapping(method = RequestMethod.GET, path = "/docs/id/{documentId}")
+  public ResultDTO readById(@PathVariable("documentId") long documentId) {
+    Optional<DocumentEntity> documentEntity = documentService.readDocumentById(documentId);
 
-    UserEntity userEntity = documentEntity.getUser();
-
-    if (userEntity != null) {
-      readDocumentDTO.setUsername(userEntity.getUsername());
+    if (!documentEntity.isPresent()) {
+      return new ResultDTO("해당 문서가 존재하지 않습니다", false);
     }
 
+    ReadDocumentDTO readDocumentDTO = new ReadDocumentDTO(documentEntity.get());
     return new ResultDTO("문서 조회", true, readDocumentDTO);
   }
 
   @RequestMapping(method = RequestMethod.DELETE, path = "/docs/{documentTitle}")
-  public ResultDTO delete(HttpServletRequest request, Principal principal, @PathVariable("documentTitle") String documentTitle) {
+  public ResultDTO delete(
+    HttpServletRequest request,
+    Principal principal,
+    @PathVariable("documentTitle") String documentTitle,
+    @RequestParam("message") String message
+  ) {
     DocumentEntity documentEntity = documentService.readDocument(documentTitle);
 
     if (documentEntity == null) {
@@ -103,9 +122,16 @@ public class DocumentController {
       "",
       user,
       request.getRemoteAddr(),
-      "문서 삭제"
+      "문서 삭제",
+      message
     );
 
     return new ResultDTO("문서 삭제", true);
+  }
+
+  @RequestMapping(method = RequestMethod.GET, path = "/docs/history/{documentTitle}")
+  public ResultDTO history(@PathVariable("documentTitle") String documentTitle) {
+    List<ReadDocumentHistoryDTO> documentHistoryList = documentService.readDocumentHistory(documentTitle);
+    return new ResultDTO("문서 역사 조회", true, documentHistoryList);
   }
 }

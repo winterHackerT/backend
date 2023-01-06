@@ -32,6 +32,9 @@ public class DocumentEntity {
   private String addr;
 
   @Column(nullable = false, length = 1000)
+  private String working;
+
+  @Column(nullable = false, length = 1000)
   private String message;
 
 }
