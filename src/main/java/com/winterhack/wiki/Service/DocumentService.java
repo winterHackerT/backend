@@ -45,13 +45,13 @@ public class DocumentService {
   }
 
   public List<ReadDocumentHistoryDTO> readDocumentHistory(String title) {
-    List<DocumentEntity> list = documentRepository.findAllByTitleOrderByDatetimeAsc(title);
-    AtomicLong order = new AtomicLong();
+    List<DocumentEntity> list = documentRepository.findAllByTitleOrderByDatetimeDesc(title);
+    AtomicLong order = new AtomicLong(list.size());
 
     List<ReadDocumentHistoryDTO> history = list
       .stream()
       .map(
-        (x) -> new ReadDocumentHistoryDTO(order.getAndIncrement(), x)
+        (x) -> new ReadDocumentHistoryDTO(order.getAndDecrement(), x)
       )
       .collect(Collectors.toList());
 
