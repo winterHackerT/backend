@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.winterhack.wiki.Data.Document.ReadDocumentHistoryDTO;
@@ -55,6 +56,10 @@ public class DocumentService {
       .collect(Collectors.toList());
 
     return history;
+  }
+
+  public List<DocumentEntity> readRecentDocuments(int count) {
+    return documentRepository.findAll(Sort.by(Sort.Direction.DESC, "datetime"));
   }
 
 }

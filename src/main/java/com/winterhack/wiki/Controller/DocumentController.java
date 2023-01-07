@@ -3,6 +3,7 @@ package com.winterhack.wiki.Controller;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -140,5 +141,21 @@ public class DocumentController {
   public ResultDTO history(@PathVariable("documentTitle") String documentTitle) {
     List<ReadDocumentHistoryDTO> documentHistoryList = documentService.readDocumentHistory(documentTitle);
     return new ResultDTO("문서 역사 조회", true, documentHistoryList);
+  }
+
+  @RequestMapping(method = RequestMethod.GET, path = "/docs/recent")
+  public ResultDTO recent() {
+    List<ReadDocumentDTO> list = documentService
+      .readRecentDocuments(20)
+      .stream()
+      .map(
+        (document) -> {
+          int starCount = documentStarService.getDocumentStarCount(document.getTitle());
+          return new ReadDocumentDTO(document, starCount);
+        }
+      )
+      .collect(Collectors.toList());
+
+    return new ResultDTO("최근 편집된 문서들", true, list);
   }
 }
