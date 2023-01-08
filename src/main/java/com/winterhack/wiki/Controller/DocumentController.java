@@ -113,11 +113,11 @@ public class DocumentController {
     HttpServletRequest request,
     Principal principal,
     @PathVariable("documentTitle") String documentTitle,
-    @RequestParam("message") String message
+    @RequestParam(name = "message", defaultValue = "문서 삭제") String message
   ) {
     DocumentEntity documentEntity = documentService.readDocument(documentTitle);
 
-    if (documentEntity == null) {
+    if (documentEntity == null || documentEntity.getContent().equals("")) {
       return new ResultDTO("문서가 존재하지 않습니다", false);
     }
 
