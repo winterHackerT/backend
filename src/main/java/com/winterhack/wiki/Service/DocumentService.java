@@ -1,6 +1,10 @@
 package com.winterhack.wiki.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -69,6 +73,32 @@ public class DocumentService {
       .stream()
       .map((x) -> x.getTitle())
       .collect(Collectors.toSet());
+  }
+
+  public Set<String> readRandomDocuments(int count) {
+    Set<String> titles = documentRepository
+      .findAll()
+      .stream()
+      .map((x) -> x.getTitle())
+      .collect(Collectors.toSet());
+
+    List<String> list = new ArrayList<>(titles);
+
+    Collections.shuffle(list);
+
+    int size = list.size();
+    if (count > size) {
+      count = size;
+    }
+
+    Iterator<String> iterator = list.iterator();
+    Set<String> result = new HashSet<String>();
+
+    for (int index = 0; index < count; ++index) {
+      result.add(iterator.next());
+    }
+
+    return result;
   }
 
 }

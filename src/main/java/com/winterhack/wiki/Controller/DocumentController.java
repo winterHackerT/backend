@@ -3,6 +3,7 @@ package com.winterhack.wiki.Controller;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -99,6 +100,12 @@ public class DocumentController {
     ReadDocumentDTO readDocumentDTO = new ReadDocumentDTO(documentEntity, starCount);
 
     return new ResultDTO("문서 조회", true, readDocumentDTO);
+  }
+
+  @RequestMapping(method = RequestMethod.GET, path = "/docs/random")
+  public ResultDTO randomRead(@RequestParam(defaultValue = "1") int count) {
+    Set<String> results = documentService.readRandomDocuments(count);
+    return new ResultDTO("랜덤 문서 조회", true, results);
   }
 
   @RequestMapping(method = RequestMethod.DELETE, path = "/docs/{documentTitle}")
