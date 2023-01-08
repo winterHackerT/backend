@@ -1,18 +1,16 @@
 FROM adoptopenjdk/openjdk11 as builder
 
-ARG BACKEND_WORKDIR
-WORKDIR ${BACKEND_WORKDIR}
+WORKDIR /build
 
 COPY . .
-RUN ./gradlew clean && ./gradlew build
+RUN ./gradlew clean && ./gradlew build --info
 
 FROM adoptopenjdk/openjdk11
 
-ARG BACKEND_WORKDIR
-WORKDIR ${BACKEND_WORKDIR}
+WORKDIR /app
 
 #COPY . .
 #ENTRYPOINT java -jar ./build/libs/wiki-0.0.1-SNAPSHOT.jar
 
-COPY --from=builder . .
-ENTRYPOINT java -jar ./build/libs/wiki-0.0.1-SNAPSHOT.jar
+COPY --from=builder /build/build/libs/wiki-0.0.1-SNAPSHOT.jar /app/server.jar
+CMD java -jar /app/server.jar
