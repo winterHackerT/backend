@@ -101,4 +101,14 @@ public class DocumentService {
     return result;
   }
 
+  public Set<String> getDocumentBacklink(String documentTitle) {
+    String query = String.format("[%s](/w/%s)", documentTitle, documentTitle);
+
+    return documentRepository
+      .findAllByContentContainsOrderByDatetimeDesc(query)
+      .stream()
+      .map((x) -> x.getTitle())
+      .collect(Collectors.toSet());
+  }
+
 }

@@ -170,4 +170,10 @@ public class DocumentController {
   public ResultDTO search(@PathVariable("query") String query) {
     return new ResultDTO("문서 검색", true, documentService.findDocumentsByTitle(query));
   }
+
+  @RequestMapping(method = RequestMethod.GET, path = "/docs/backlink/{documentTitle}")
+  public ResultDTO getBacklink(@PathVariable("documentTitle") String documentTitle) {
+    return new ResultDTO("역 링크 조회", true, documentService.getDocumentBacklink(documentTitle));
+  }
+
 }

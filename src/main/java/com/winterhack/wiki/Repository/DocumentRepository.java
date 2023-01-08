@@ -12,4 +12,5 @@ public interface DocumentRepository extends JpaRepository<DocumentEntity, Long> 
   public List<DocumentEntity> findAllByTitleOrderByDatetimeAsc(String title);
   public List<DocumentEntity> findAllByTitleOrderByDatetimeDesc(String title);
   public List<DocumentEntity> findAllByTitleContains(String title);
+  public List<DocumentEntity> findAllByContentContainsOrderByDatetimeDesc(String content);
 }
