@@ -158,4 +158,9 @@ public class DocumentController {
 
     return new ResultDTO("최근 편집된 문서들", true, list);
   }
+
+  @RequestMapping(method = RequestMethod.GET, path = "/docs/search/{query}")
+  public ResultDTO search(@PathVariable("query") String query) {
+    return new ResultDTO("문서 검색", true, documentService.findDocumentsByTitle(query));
+  }
 }

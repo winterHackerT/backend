@@ -3,6 +3,7 @@ package com.winterhack.wiki.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -60,6 +61,14 @@ public class DocumentService {
 
   public List<DocumentEntity> readRecentDocuments(int count) {
     return documentRepository.findAll(Sort.by(Sort.Direction.DESC, "datetime"));
+  }
+
+  public Set<String> findDocumentsByTitle(String title) {
+    return documentRepository
+      .findAllByTitleContains(title)
+      .stream()
+      .map((x) -> x.getTitle())
+      .collect(Collectors.toSet());
   }
 
 }
