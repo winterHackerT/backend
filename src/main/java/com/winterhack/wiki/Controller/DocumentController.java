@@ -3,6 +3,7 @@ package com.winterhack.wiki.Controller;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -101,16 +102,22 @@ public class DocumentController {
     return new ResultDTO("문서 조회", true, readDocumentDTO);
   }
 
+  @RequestMapping(method = RequestMethod.GET, path = "/docs/random")
+  public ResultDTO randomRead(@RequestParam(defaultValue = "1") int count) {
+    Set<String> results = documentService.readRandomDocuments(count);
+    return new ResultDTO("랜덤 문서 조회", true, results);
+  }
+
   @RequestMapping(method = RequestMethod.DELETE, path = "/docs/{documentTitle}")
   public ResultDTO delete(
     HttpServletRequest request,
     Principal principal,
     @PathVariable("documentTitle") String documentTitle,
-    @RequestParam("message") String message
+    @RequestParam(name = "message", defaultValue = "문서 삭제") String message
   ) {
     DocumentEntity documentEntity = documentService.readDocument(documentTitle);
 
-    if (documentEntity == null) {
+    if (documentEntity == null || documentEntity.getContent().equals("")) {
       return new ResultDTO("문서가 존재하지 않습니다", false);
     }
 
@@ -158,4 +165,15 @@ public class DocumentController {
 
     return new ResultDTO("최근 편집된 문서들", true, list);
   }
+
+  @RequestMapping(method = RequestMethod.GET, path = "/docs/search/{query}")
+  public ResultDTO search(@PathVariable("query") String query) {
+    return new ResultDTO("문서 검색", true, documentService.findDocumentsByTitle(query));
+  }
+
+  @RequestMapping(method = RequestMethod.GET, path = "/docs/backlink/{documentTitle}")
+  public ResultDTO getBacklink(@PathVariable("documentTitle") String documentTitle) {
+    return new ResultDTO("역 링크 조회", true, documentService.getDocumentBacklink(documentTitle));
+  }
+
 }
